@@ -7,7 +7,7 @@ const request = axios.create({
     timeout: 5000
 })
 
-class List {
+export class List {
     constructor() {
         // this.list = []   ?为什么在这里申明会报错
         makeAutoObservable(this, {}, {autoBind: true})
@@ -29,6 +29,7 @@ class List {
         })
     }
     async getListByNumber(start: number, end: number) {
+        console.log('sliceccccccccccccccc')
         await request.get('/list').then(res => {
             runInAction(()=>{
                 this.listPage = res.data.slice(start, end)
@@ -37,7 +38,7 @@ class List {
             console.log(err)
         })
     }
-    async addComment(item: CommentItem) {
+    async addComment(item: CommentItem, start?: number, end?: number) {
         const newObj = {
             id: this.list.length + 1,
             key: this.list.length + 1,
@@ -46,10 +47,17 @@ class List {
             time: item.time,
             attitude: 0
         }
-        await request.post('/list', newObj).then(this.getList).catch(console.error)
+        await request.post('/list', newObj).then(()=> {
+            this.getList()
+            if(start !== undefined && end !== undefined) {
+                this.getListByNumber(start, end)
+            }
+        }).catch(console.error)
     }
     async deleteComment(id: number) {
+        console.log('原本的数据长度' + this.length)
         await request.delete('/list/' + id).then(this.getList).catch(console.error)
+        console.log('删除成功')
     }
     async deleteCommentPatch(ids: Key[]) {
         await ids.forEach(id => {

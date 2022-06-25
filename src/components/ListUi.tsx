@@ -7,7 +7,8 @@ import 'moment/locale/zh-cn';
 import {commentType} from "../types/type";
 
 moment.locale('zh-cn')
-function ListUi({record, deleteItem}: {record: commentType, deleteItem :()=>void}) {
+function ListUi({record, deleteComment}: {record: commentType, deleteComment :(idx: number)=>void}) {
+    // console.log('ListUi更新')
     const [attitude, setAttitude] = useState<number>(record.attitude);
     const like = () => {
         setAttitude((prevState) => {
@@ -38,7 +39,7 @@ function ListUi({record, deleteItem}: {record: commentType, deleteItem :()=>void
           </span>
         </Tooltip>,
         <span key="comment-basic-reply-to">回复</span>,
-        <span onClick={() => {deleteItem()}} key="comment-basic-delete">删除</span>
+        <span onClick={() => {deleteComment(record.id)}} key="comment-basic-delete">删除</span>
     ];
 
     return (

@@ -1,12 +1,12 @@
 import { Avatar, Button, Comment, Form, Input } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import store from "../mobx/store";
 
 import {useStore} from "../mobx/rootStore";
+import {List} from "../mobx/store";
+
 
 const { TextArea } = Input;
-
 
 interface EditorProps {
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -29,32 +29,29 @@ const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
     </>
 );
 
-const AddComment: React.FC = () => {
-    const {comment} = useStore()
+function AddComment ({current, pageSize, comment} : {current: number, pageSize: number, comment: List}) {
+    // console.log('ADDUi更新')
+    const {addComment} = comment
     const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState('');
 
     const handleSubmit = () => {
         if (!value) return;
-
         setSubmitting(false);
-
-        // setTimeout(() => {
-        //     setSubmitting(false);
-        //     setValue('');
-        //
-        //     // store.addComment({
-        //     //     name: 'ZZY',
-        //     //     text: value,
-        //     //     time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-        //     // })
-        //
-        // }, 1000);
-        comment.addComment({
-            name: '小林',
-            text: value,
-            time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-        })
+        setTimeout(() => {
+            setSubmitting(false);
+            setValue('');
+            addComment({
+                name: 'ZZY',
+                text: value,
+                time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+            }, pageSize*(current - 1), pageSize*current)
+        }, 1000);
+        // comment.addComment({
+        //     name: '小林',
+        //     text: value,
+        //     time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        // })
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
