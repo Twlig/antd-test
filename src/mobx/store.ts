@@ -21,7 +21,7 @@ export class List {
     async getList() {
         await request.get('/list').then(res => {
             runInAction(()=>{
-                console.log('lisssssssssssssssssssst')
+                // console.log('lisssssssssssssssssssst')
                 this.list = res.data
             })
         }, err => {
@@ -29,13 +29,21 @@ export class List {
         })
     }
     async getListByNumber(start: number, end: number) {
-        console.log('sliceccccccccccccccc')
-        await request.get('/list').then(res => {
-            runInAction(()=>{
-                this.listPage = res.data.slice(start, end)
-            })
-        }, err => {
-            console.log(err)
+        // console.log('sliceccccccccccccccc')
+        this.listPage = this.list.slice(start, end)
+        // await request.get('/list').then(res => {
+        //     runInAction(()=>{
+        //         this.listPage = res.data.slice(start, end)
+        //     })
+        // }, err => {
+        //     console.log(err)
+        // })
+    }
+    async getListByName(name: string) {
+        await this.getList().then(() => {
+            console.log(2)
+            this.list = this.list.filter(val => val.name === name)
+            console.log(this.list.length)
         })
     }
     async addComment(item: CommentItem, start?: number, end?: number) {

@@ -29,8 +29,8 @@ const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
     </>
 );
 
-function AddComment ({current, pageSize, comment} : {current: number, pageSize: number, comment: List}) {
-    // console.log('ADDUi更新')
+function AddComment ({comment} : {comment: List}) {
+    console.log('ADDUi更新')
     const {addComment} = comment
     const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState('');
@@ -45,7 +45,7 @@ function AddComment ({current, pageSize, comment} : {current: number, pageSize: 
                 name: 'ZZY',
                 text: value,
                 time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-            }, pageSize*(current - 1), pageSize*current)
+            })
         }, 1000);
         // comment.addComment({
         //     name: '小林',

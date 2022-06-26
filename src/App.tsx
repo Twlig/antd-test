@@ -7,53 +7,66 @@ import AddComment from "./components/AddComment";
 import {useStore} from "./mobx/rootStore";
 import TableUi from "./components/TableUi";
 import {List} from "./mobx/store";
+import {commentType} from "./types/type";
 
 
 function App() {
     const {comment} = useStore()
-    const [current, setCurrent] = useState(1)
+    // const [list, setList] = useState(comment.list)
     const pageSize = 10
     const TableUiProps = {
         comment,
-        current,
-        pageSize,
-        setCurrent
+        pageSize
     }
-    useEffect(() => {
-        comment.getList()
-        comment.getListByNumber(0, pageSize)
-        setCurrent(1)
-    }, [])
     console.log('App更新')
-    console.log(current)
     const TA = observer(TableUi)
     return (
         <div className="App">
             <TA {...TableUiProps}/>
-            <AddComment current={current} pageSize={pageSize} comment={comment}/>
+            <AddComment comment={comment}/>
             {/*<Test comment={comment}/>*/}
+            {/*<Input list={list} setList={setList}/>*/}
+            {/*{list.toLocaleString()}*/}
         </div>
     );
 }
 
 
-// const Test = function Test() {   //1. 为啥在更新APP页面这个函数也会更新？他不是没有接收任何状态吗？  除非写成memo
+// const Test = observer(function Test({comment}:{comment: List}) {   //1. 为啥在更新APP页面这个函数也会更新？他不是没有接收任何状态吗？
 //     console.log('Test更新')
 //     return (
 //         <div>
-//             Test
+//             {comment.length}
+//         </div>
+//     )
+// })
+
+
+// const Test = ({comment}:{comment: List}) => {
+//     console.log('Test更新')
+//     return (
+//         <div>
+//             {comment.length}
 //         </div>
 //     )
 // }
 
-const Test = memo(function Test({comment}:{comment: List}) {   //2. 但是写成memo后, list更新，Test也不更新
-    console.log('Test更新')
-    return (
-        <div>
-            {comment.list.toLocaleString()}
-        </div>
-    )
-})
+// const Input = function ({list, setList}:{list: commentType[], setList: (a: commentType[]) => void}) {
+//     console.log('input更新')
+//     const [val, setVal] = useState('')
+//     return (
+//         <div>
+//             <input value={val}  onChange={e => {
+//                 setVal(e.target.value)
+//                 setList([])
+//             }
+//             }/>
+//             {val}
+//         </div>
+//     )
+// }
+
+//上面两种写法都可以，第一种是通过监听
 export default App;
 
 
